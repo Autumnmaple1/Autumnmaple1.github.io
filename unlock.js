@@ -10,7 +10,7 @@ form.addEventListener('submit',async event=>{
  if(downloadURL){URL.revokeObjectURL(downloadURL);downloadURL=undefined;download.removeAttribute('href');}
  try{
   if(!globalThis.crypto?.subtle){status.textContent='请通过 HTTPS 访问此页面。';return;}
-  if(!assetPromise)assetPromise=fetch('../assets/archive.bin').then(r=>{if(!r.ok)throw Error('asset');return r.arrayBuffer();}).catch(e=>{assetPromise=undefined;throw e;});
+  if(!assetPromise)assetPromise=fetch('../assets/archive.bin?v=2').then(r=>{if(!r.ok)throw Error('asset');return r.arrayBuffer();}).catch(e=>{assetPromise=undefined;throw e;});
   let data;try{data=new Uint8Array(await assetPromise);}catch{status.textContent='文件加载失败，请稍后重试。';return;}
   if(new TextDecoder().decode(data.slice(0,8))!=='NOVAARG1'){status.textContent='文件异常，请联系活动组织者。';return;}
   const input=document.getElementById('password');
