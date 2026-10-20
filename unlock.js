@@ -17,7 +17,7 @@ form.addEventListener('submit',async event=>{
   const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(input.value),'PBKDF2',false,['deriveKey']);
   const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:data.slice(8,24),iterations:600000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['decrypt']);
   let plaintext;try{plaintext=await crypto.subtle.decrypt({name:'AES-GCM',iv:data.slice(24,36)},key,data.slice(36));}catch{status.textContent='密码错误或文件损坏。';return;}
-  input.value='';downloadURL=URL.createObjectURL(new Blob([plaintext],{type:'image/jpeg'}));download.href=downloadURL;download.hidden=false;status.textContent='解密成功';
+  input.value='';const jpeg=globalThis.NovaZip?NovaZip.renameEntry(new Uint8Array(plaintext)):new Uint8Array(plaintext);downloadURL=URL.createObjectURL(new Blob([jpeg],{type:'image/jpeg'}));download.href=downloadURL;download.hidden=false;status.textContent='解密成功';
  }catch{status.textContent='无法解密，请重试或更换浏览器。';}
  finally{button.disabled=false;}
 });
